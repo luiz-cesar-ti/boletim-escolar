@@ -34,7 +34,7 @@ export default function Boletins() {
   const [modeloConfig, setModeloConfig] = useState<ModeloConfig | null>(null);
 
   const [formatoPDF, setFormatoPDF] = useState<'multiplo' | 'unico'>('multiplo');
-  const [opcaoAnos, setOpcaoAnos] = useState<'recente' | 'todos'>('recente');
+  const [opcaoAnos, setOpcaoAnos] = useState<string>('todos');
   const [isGenerating, setIsGenerating] = useState(false);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -161,9 +161,14 @@ export default function Boletins() {
       }
 
       // Define abas/anos a gerar
-      const anosParaGerar = opcaoAnos === 'recente' 
-        ? [anosLetivos[anosLetivos.length - 1]] 
-        : anosLetivos;
+      let anosParaGerar = anosLetivos;
+      if (opcaoAnos !== 'todos') {
+        if (opcaoAnos === 'recente') {
+          anosParaGerar = [anosLetivos[anosLetivos.length - 1]];
+        } else {
+          anosParaGerar = [opcaoAnos];
+        }
+      }
 
       if (formatoPDF === 'unico') {
         const doc = new jsPDF({ orientation: 'landscape' });
@@ -302,11 +307,14 @@ export default function Boletins() {
 
 
     // --- 4. TABELA DE NOTAS ---
-    const head = [config.colunas];
-    const body = [config.colunas.map(colName => {
+    const head = [['', ...config.colunas]];
+    
+    // Calcula a linha de notas e insere "NOTA" na primeira célula
+    const rowNotas = config.colunas.map(colName => {
       const val = data.notas[colName];
       return val !== undefined && val !== null && val !== '' ? String(val) : '-';
-    })];
+    });
+    const body = [['NOTA', ...rowNotas]];
 
     let startY = alunoY + 16;
     
@@ -319,7 +327,7 @@ export default function Boletins() {
       theme: 'grid',
       styles: {
         fontSize: 13, // notas maiores
-        cellPadding: { top: 6, right: 10, bottom: 6, left: 10 }, // padding ajustado
+        cellPadding: { top: 6, right: 10, bottom: 6, left: 10 },
         valign: 'middle',
         halign: 'center',
         font: 'helvetica',
@@ -339,6 +347,13 @@ export default function Boletins() {
         fillColor: [255, 255, 255],
         textColor: [15, 23, 42],
         fontStyle: 'bold' 
+      },
+      didParseCell: function(data: any) {
+        // Estilizar especificamente a coluna "NOTA" para deixá-la discreta se necessário
+        if (data.section === 'body' && data.column.index === 0) {
+          data.cell.styles.textColor = [100, 116, 139]; // slate-500
+          data.cell.styles.fontSize = 11;
+        }
       }
     });
 
@@ -385,12 +400,11 @@ export default function Boletins() {
     doc.setTextColor(100, 116, 139); // Cinza
     doc.text('Assinatura do(a) Professor(a)', sigX, sigY + 6, { align: 'center' });
 
-    // Coluna direita: Cidade/Data e Paginação
+    // Coluna direita: Cidade/Data
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(9);
     doc.setTextColor(71, 85, 105); // slate-600
     doc.text(`São Vicente, ${dateStr}`, pageWidth - margin, footerY, { align: 'right' });
-    doc.text(`Página ${(doc.internal as any).getNumberOfPages()}`, pageWidth - margin, footerY + 5, { align: 'right' });
   };
 
   return (
@@ -468,9 +482,11 @@ export default function Boletins() {
                 {anosLetivos.length > 1 && (
                   <div className={styles.opcaoGroup}>
                     <label className={styles.opcaoLabel}>Anos Letivos (Múltiplas Abas Detectadas)</label>
-                    <select className="input-field" value={opcaoAnos} onChange={e => setOpcaoAnos(e.target.value as any)}>
-                      <option value="recente">Apenas o Ano Mais Recente ({anosLetivos[anosLetivos.length - 1]})</option>
+                    <select className="input-field" value={opcaoAnos} onChange={e => setOpcaoAnos(e.target.value)}>
                       <option value="todos">Todos os Anos (Histórico Completo)</option>
+                      {[...anosLetivos].reverse().map(ano => (
+                        <option key={ano} value={ano}>Apenas o ano letivo de {ano}</option>
+                      ))}
                     </select>
                   </div>
                 )}
