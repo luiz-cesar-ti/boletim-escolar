@@ -1,0 +1,178 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.header {
+  margin-bottom: 0.5rem;
+}
+
+.description {
+  color: var(--text-muted);
+}
+
+.uploadArea {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+  border: 2px dashed var(--border-color);
+  border-radius: var(--radius-lg);
+  background-color: var(--bg-color);
+  transition: all 0.3s ease;
+}
+
+.uploadArea:hover {
+  border-color: var(--accent-color);
+  background-color: #f0fdf4;
+}
+
+.uploadIcon {
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+
+.uploadArea h3 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.uploadHint {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  margin: 0.5rem 0 1.5rem;
+}
+
+.uploadBtn {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.hiddenInput {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 100%;
+  min-height: 100%;
+  font-size: 100px;
+  text-align: right;
+  opacity: 0;
+  outline: none;
+  background: white;
+  cursor: pointer;
+  display: none;
+}
+
+.errorAlert {
+  margin-top: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--error-color);
+  background-color: #fef2f2;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+  border: 1px solid #fecaca;
+  font-size: 0.875rem;
+}
+
+/* Validated State */
+.validatedFlow {
+  padding: 1.5rem;
+}
+
+.successHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: var(--radius-md);
+  margin-bottom: 2rem;
+}
+
+.successIcon {
+  color: var(--success-color);
+}
+
+.flowGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+@media (max-width: 768px) {
+  .flowGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.flowCard {
+  display: flex;
+  flex-direction: column;
+}
+
+.flowCardTitle {
+  font-size: 1.125rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.alunosList {
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.alunosActions {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background-color: var(--bg-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.listaScroll {
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 0.5rem;
+}
+
+.alunoItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background-color 0.1s;
+}
+
+.alunoItem:hover {
+  background-color: var(--bg-color);
+}
+
+.opcaoGroup {
+  margin-bottom: 1.5rem;
+}
+
+.opcaoLabel {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: var(--text-main);
+}
+
+.generateAction {
+  margin-top: auto;
+}
